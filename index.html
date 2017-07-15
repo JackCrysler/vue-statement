@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+</head>
+<body>
+<div class="container">
+
+    <global-header v-bind:title="'订单支付'"></global-header>
+    <main>
+        <address-detail :person_name="person_name"
+                        :address_detail="address_detail"
+                        :phone_number="phone_number">
+        </address-detail>
+
+        <shop-detail v-for="x in goods_list" :shop_name="x.shop"
+                     :product_name="x.product"
+                     :discount_price="x.discount_price"
+                     :product_price="x.price"
+                     :count_limit="x.reserved_count"
+                     :shop_id="x.id"
+        ></shop-detail>
+
+        <pay-wrap :pay_ways="pay_ways">
+            <li>
+                <div>
+                    <span>其它支付方式</span>
+                    <span>></span>
+                </div>
+            </li>
+        </pay-wrap>
+    </main>
+
+    <order-footer :plus_condition="plus_condition" :total_price="init_price"></order-footer>
+</div>
+
+
+<script type="text/x-template" id="shop">
+    <div class="shop">
+        <p class="tit">
+            <span class="iconfont icon-home home"></span>
+            <span class="shopname">{{shop_name}}</span>
+        </p>
+        <dl>
+            <dt><img src="img/1.jpg" alt=""></dt>
+            <dd>
+                <h3>{{product_name}}</h3>
+                <div>
+                    <p class="price"><span>￥<label>{{discount_price}}</label></span><span>￥{{product_price}}</span></p>
+                    <p class="sum">
+                        <span @click="minus">-</span>
+                        <input type="text" value="1" v-model="count">
+                        <span @click="plus">+</span>
+                    </p>
+                </div>
+            </dd>
+        </dl>
+        <ul>
+            <li>
+                <p>商品总金额</p>
+                <p>￥<span>{{sum_price}}</span></p>
+            </li>
+            <li>
+                <p>运费</p>
+                <p>￥<span>{{freight}}</span></p>
+            </li>
+            <li>
+                <p>总额(含运费)</p>
+                <p class="money">￥<span>{{all_price}}</span></p>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script src="../lib/vue.js"></script>
+<script src="../lib/axios.js"></script>
+<script src="component/header.js"></script>
+<script src="component/footer.js"></script>
+<script src="component/address.js"></script>
+<script src="component/shop.js"></script>
+<script src="component/pay.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
