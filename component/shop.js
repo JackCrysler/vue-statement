@@ -4,11 +4,11 @@ let shop = {
         return {
             count: 1,
             sum_price: 0,
-            freight: 10,
             all_price: 0
         }
     },
     props: {
+        freight:{type:Number},
         shop_name: {
             type: String,
             required: true
@@ -27,6 +27,7 @@ let shop = {
         },
         plus: function () {
             this.count >= this.count_limit ? this.count = this.count_limit : this.count++;
+
         },
         compute_price: function () {
             this.sum_price = this.count * this.discount_price;

@@ -13,8 +13,31 @@ new Vue({
         discount_price:120,
         product_price:0,
         count_limit:10,
-        pay_ways:{'余额支付':100,'奖金支付':50},
-        init_price:{}
+        pay_ways:{},
+        init_price:0,
+        query_data:{},
+        reserved:0,
+        awards:0,
+        reserved_money_input:true,
+        awards_money_input:false
+    },
+    methods:{
+        send:function (str) {
+            let _obj = {
+
+            };
+            if(str=='reserved'){
+                _obj.selected = !this.reserved_money_input;
+                _obj.way = '余额支付';
+                _obj.money = this.reserved;
+            }else{
+                _obj.way= '奖金支付';
+                _obj.money = this.awards;
+                _obj.selected = !this.awards_money_input;
+            }
+
+            eventBus.$emit('pay_way',_obj)
+        }
     },
     components:{
         "order-footer":orderFooter,
@@ -22,14 +45,15 @@ new Vue({
         "shop-detail":shop,
         "pay-wrap":pay_wrap
     },
-
     created:function () {
-
         axios.get('server/shop.json').then((result)=> {
-
+            this.query_data = result.data;
             this.goods_list = result.data.res;
+            this.reserved = result.data.pay_ways.reserved;
+            this.awards = result.data.pay_ways.awards;
+            this.init_price = result.data.init_price;
             for(let i in result.data.res){
-                this.init_price[result.data.res[i].id] = result.data.res[i].price
+                this.init_price[result.data.res[i].id] = result.data.res[i].discount_price*1+result.data.res[i]
             }
         });
     }

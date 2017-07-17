@@ -2,30 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        .v-enter,.v-leave-to{
+            opacity: 0;
+        }
+        .v-enter-to,.v-leave{
+            opacity: 1;
+        }
+        .v-enter-active,.v-leave-active{
+            transition: opacity 2s ease;
+        }
+        .tip{
+            position: fixed;
+            background: #000;
+            color: #fff;
+            bottom: 30px;
+            width: 80%;
+            left: 10%;
+            line-height: 40px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
 
     <global-header v-bind:title="'订单支付'"></global-header>
+
     <main>
         <address-detail :person_name="person_name"
                         :address_detail="address_detail"
                         :phone_number="phone_number">
         </address-detail>
 
-        <shop-detail v-for="x in goods_list" :shop_name="x.shop"
+        <shop-detail v-for="(x,index) in goods_list" :shop_name="x.shop"
                      :product_name="x.product"
                      :discount_price="x.discount_price"
                      :product_price="x.price"
                      :count_limit="x.reserved_count"
                      :shop_id="x.id"
+                     :freight="x.freight"
+                     :key="index"
         ></shop-detail>
 
         <pay-wrap :pay_ways="pay_ways">
+            <li>
+                <div><p>
+                    <span>余额支付 ￥<label>{{reserved}}</label></span>
+                </p>
+                    <input type="checkbox" v-model="reserved_money_input" id="name1" class="checkbox"><label @click="send('reserved')" for="name1" class="checkbox-label"></label>
+                </div>
+            </li>
+            <li>
+                <div><p>
+                    <span>奖金支付 ￥<label>{{awards}}</label></span>
+                </p>
+                    <input type="checkbox" v-model="awards_money_input" id="name2" class="checkbox"><label @click="send('awards')" for="name2"
+                                                                                                           class="checkbox-label"></label>
+                </div>
+            </li>
             <li>
                 <div>
                     <span>其它支付方式</span>
@@ -35,7 +77,9 @@
         </pay-wrap>
     </main>
 
-    <order-footer :plus_condition="plus_condition" :total_price="init_price"></order-footer>
+    <order-footer :plus_condition="plus_condition" :init_price="init_price" :query_data="query_data"></order-footer>
+
+
 </div>
 
 
